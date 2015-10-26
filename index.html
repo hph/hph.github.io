@@ -1,1 +1,67 @@
-Hello, world!
+<!doctype html>
+<html>
+  <head>
+    <title>hph.is</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Haukur Páll Hallvarðsson">
+    <meta name="description" content="Haukur Páll Hallvarðsson's personal website">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="tylesheet" type="text/css">
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        font-family: "lato", sans-serif;
+        background-color: rgb(23,31,39);
+        color: rgb(55,82,106);
+      }
+
+      p {
+        position: relative;
+        width: 1002px;
+        margin: 0 auto;
+        top: 50%;
+        font-weight: 300;
+        font-size: 48px;
+        line-height: 1.4em;
+        -webkit-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+                transform: translateY(-50%);
+      }
+
+      @media (max-width: 1200px) {
+        p {
+          width: 916px;
+        }
+      }
+
+      @media (max-width: 960px) {
+        p {
+          width: 760px;
+        }
+      }
+
+      @media (max-width: 800px) {
+        p {
+          font-size: 38px;
+          width: 600px;
+        }
+      }
+
+      a {
+        transition: color 0.36s ease;
+        color: rgb(88,136,176);
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: rgb(55,82,106);
+      }
+    </style>
+  </head>
+  <body>
+    <p>Hi, my name is Haukur, or <a href="https://en.wiktionary.org/wiki/haukur">Hawk</a> in English. I'm a software developer from Reykjavík, Iceland. I work at <a href="https://oz.com">OZ</a>. I sometimes write <a href="https://github.com/hph">open-source software</a>. You can contact me by <a href="mailto:hph@hph.is">email</a>.
+  </body>
+</html>
