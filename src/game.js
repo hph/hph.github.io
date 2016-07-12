@@ -10,15 +10,16 @@ export default class Game {
     this.width = this.canvas.width = window.innerWidth;
     this.height = this.canvas.height = window.innerHeight;
     this.context = this.canvas.getContext('2d');
-    this.context.fillStyle = `rgba(255,0,0,0.3)`;
     this.size = 3;
     this.margin = 1;
     this.boxSize = this.size + this.margin;
     this.cells = this.getInitialCells();
     window.requestAnimationFrame(this.render.bind(this));
+    window.onmousemove = this.onMouseMove.bind(this);
   }
 
-  addCell (x, y) {
+  addCell (x, y, color = 'rgba(255,0,0,0.3)') {
+    this.context.fillStyle = color;
     this.context.fillRect(x, y, this.size, this.size);
   }
 
@@ -99,5 +100,18 @@ export default class Game {
       this.cells = nextCells;
     }
     window.requestAnimationFrame(this.render.bind(this));
+  }
+
+  onMouseMove (e) {
+    const { clientX, clientY } = e;
+    const x = Math.floor(clientX / this.boxSize);
+    const y = Math.floor(clientY / this.boxSize);
+    const cell = this.cells[x][y];
+    if (!cell) {
+      this.cells[x][y] = 1;
+      const cellX = clientX - (clientX % this.boxSize);
+      const cellY = clientY - (clientY % this.boxSize);
+      this.addCell(cellX, cellY, 'rgba(255,0,0,1.0)');
+    }
   }
 }
