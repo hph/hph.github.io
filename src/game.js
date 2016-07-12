@@ -11,7 +11,7 @@ export default class Game {
     this.height = this.canvas.height = window.innerHeight;
     this.context = this.canvas.getContext('2d');
     this.context.fillStyle = `rgba(255,0,0,0.3)`;
-    this.size = 2;
+    this.size = 3;
     this.margin = 1;
     this.boxSize = this.size + this.margin;
     this.cells = this.getInitialCells();
