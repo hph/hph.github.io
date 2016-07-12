@@ -1,99 +1,18 @@
 <!doctype html>
-<html>
+<html lang="en-us">
   <head>
-    <title>hph.is</title>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Haukur Páll Hallvarðsson">
     <meta name="description" content="Haukur Páll Hallvarðsson's personal website">
-    <link href="https://fonts.googleapis.com/css?family=Lato:300" rel="tylesheet" type="text/css">
-    <style>
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        width: 100%;
-        font-family: "lato", sans-serif;
-        background-color: rgb(23,31,39);
-        color: rgb(55,82,106);
-      }
-
-      p {
-        position: relative;
-        width: 1002px;
-        margin: 0 auto;
-        top: 50%;
-        font-weight: 300;
-        font-size: 48px;
-        line-height: 1.4em;
-        -webkit-transform: translateY(-50%);
-            -ms-transform: translateY(-50%);
-                transform: translateY(-50%);
-      }
-
-      @media (max-width: 1200px) {
-        p {
-          width: 916px;
-        }
-      }
-
-      @media (max-width: 960px) {
-        p {
-          font-size: 38px;
-          width: 860px;
-        }
-      }
-
-      @media (max-width: 900px) {
-        p {
-          font-size: 36px;
-          width: 760px;
-        }
-      }
-
-      @media (max-width: 800px) {
-        p {
-          font-size: 32px;
-          width: 680px;
-        }
-      }
-
-      a {
-        position: relative;
-        color: rgb(88,136,176);
-        text-decoration: none;
-        -webkit-transition: color .36s ease-in-out;
-                transition: color .36s ease;
-      }
-
-      a:hover {
-        color: rgb(55,82,106);
-      }
-
-      a:before {
-        position: absolute;
-        width: 100%;
-        height: 2px;
-        bottom: 0;
-        left: 0;
-        content: "";
-        background-color: rgb(55,82,106);
-        visibility: hidden;
-        -webkit-transform: scaleX(0);
-                transform: scaleX(0);
-        -webkit-transition: .36s ease-in-out 0s;
-                transition: .36s ease-in-out 0s;
-      }
-
-      a:hover:before {
-        visibility: visible;
-        -webkit-transform: scaleX(1);
-                transform: scaleX(1);
-      }
-    </style>
+    <title>hph.is</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="build/styles.css" rel="stylesheet">
+    <script src="build/app.js" async></script>
   </head>
   <body>
-    <p>Hi, my name is Haukur, or Hawk in English. I'm a software developer from Reykjavík, Iceland. I work at <a href="https://oz.com">OZ</a>. I sometimes write open-source <a href="https://github.com/hph">software</a>. You can contact me by <a href="mailto:hph@hph.is">email</a>.
+    <canvas></canvas>
+    <div>Hi, my name is Haukur, or Hawk in English. I'm a software developer from Reykjavík, Iceland. I sometimes write open-source <a href="https://github.com/hph">software</a>. You can contact me by <a href="mailto:hph@hph.is">email</a>.</div>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
