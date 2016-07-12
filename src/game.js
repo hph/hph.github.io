@@ -27,8 +27,8 @@ export default class Game {
   }
 
   getInitialCells (chance = 0.2) {
-    const columns = Math.floor(this.width / (this.size + this.margin));
-    const rows = Math.floor(this.height / (this.size + this.margin));
+    const columns = Math.floor(this.width / this.boxSize);
+    const rows = Math.floor(this.height / this.boxSize);
     const cells = [];
     for (let i = 0; i < columns; i++) {
       const column = [];
@@ -42,6 +42,7 @@ export default class Game {
   }
 
   neighbours (x, y) {
+    // This can be optimized dramatically, but it's fast enough.
     const first = this.cells[x - 1] || [];
     const second = this.cells[x] || [];
     const third = this.cells[x + 1] || [];
