@@ -6,20 +6,23 @@
 
 export default class Game {
   constructor () {
-    this.canvas = document.querySelector('canvas');
-    this.width = this.canvas.width = window.innerWidth;
-    this.height = this.canvas.height = window.innerHeight;
-    this.context = this.canvas.getContext('2d');
     this.size = 3;
     this.margin = 1;
     this.boxSize = this.size + this.margin;
-    this.cells = this.getInitialCells();
-    window.requestAnimationFrame(this.render.bind(this));
+    this.canvas = document.querySelector('canvas');
+    this.width = this.canvas.width = window.innerWidth;
+    this.height = this.canvas.height = window.innerHeight;
+    this.columns = Math.floor(this.width / this.boxSize);
+    this.rows = Math.floor(this.height / this.boxSize);
+    this.context = this.canvas.getContext('2d');
+    this.context.fillStyle = 'rgba(255,0,0,0.3';
+    this.colony = this.getRandomInitialColony();
+    this.render = this.render.bind(this);
     window.onmousemove = this.onMouseMove.bind(this);
+    window.requestAnimationFrame(this.render);
   }
 
-  addCell (x, y, color = 'rgba(255,0,0,0.3)') {
-    this.context.fillStyle = color;
+  addCell (x, y) {
     this.context.fillRect(x, y, this.size, this.size);
   }
 
@@ -27,91 +30,72 @@ export default class Game {
     this.context.clearRect(x, y, this.size, this.size);
   }
 
-  getInitialCells (chance = 0.2) {
-    const columns = Math.floor(this.width / this.boxSize);
-    const rows = Math.floor(this.height / this.boxSize);
-    const cells = [];
-    for (let i = 0; i < columns; i++) {
-      const column = [];
-      for (let j = 0; j < rows; j++) {
-        const cell = Math.random() < chance ? 1 : 0;
-        column[j] = cell;
-      }
-      cells.push(column);
-    }
-    return cells;
+  getEmptyColony () {
+    return Array(this.columns).fill().map(() => Array(this.rows).fill(0));
+  }
+
+  getRandomInitialColony (chance = 0.25) {
+    return this.getEmptyColony().map(column => {
+      return column.map(cell => Math.random() < chance ? 1 : 0);
+    });
   }
 
   neighbours (x, y) {
-    // This can be optimized dramatically, but it's fast enough.
-    const first = this.cells[x - 1] || [];
-    const second = this.cells[x] || [];
-    const third = this.cells[x + 1] || [];
+    const fx = x === 0 ? this.columns - 1 : x - 1;
+    const lx = x === this.columns - 1 ? 0 : x + 1;
+    const fy = y === 0 ? this.rows - 1 : y - 1;
+    const ly = y === this.rows - 1 ? 0 : y + 1;
+
+    const first = this.colony[fx];
+    const second = this.colony[x];
+    const third = this.colony[lx];
+
     return (
-      (first[y - 1] || 0) + (first[y] || 0) + (first[y + 1] || 0) + 
-      (second[y - 1] || 0) + (second[y + 1] || 0) + 
-      (third[y - 1] || 0) + (third[y] || 0) + (third[y + 1] || 0)
+      first[fy] + first[y] + first[ly] +
+      second[fy] + second[ly] +
+      third[fy] + third[y] + third[ly]
     );
   }
 
   render () {
     if (!document.hasFocus()) {
-      return window.requestAnimationFrame(this.render.bind(this));
+      return window.requestAnimationFrame(this.render);
     }
 
-    if (!this.previous) {
-      this.previous = new Date();
-      this.cells.forEach((column, i) => {
-        column.forEach((row, j) => {
-          if (row) {
-            this.addCell(i * this.boxSize, j * this.boxSize);
-          } else {
-            this.removeCell(i * this.boxSize, j * this.boxSize);
-          }
-        });
+    const nextColony = [];
+    this.colony.forEach((column, i) => {
+      const nextColumn = [];
+      column.forEach((cell, j) => {
+        const neighbours = this.neighbours(i, j);
+
+        let nextCell = 0;
+        if (neighbours === 3 || cell && neighbours === 2) {
+          nextCell = 1;
+        }
+        nextColumn[j] = nextCell;
+
+        if (!cell && nextCell) {
+          this.addCell(i * this.boxSize, j * this.boxSize);
+        } else if (cell && !nextCell) {
+          this.removeCell(i * this.boxSize, j * this.boxSize);
+        }
       });
-      return window.requestAnimationFrame(this.render.bind(this));
-    }
-
-    const now = new Date();
-    const delta = now - this.previous;
-    let nextCells = [];
-    if (delta > 80) {
-      this.previous = now;
-      this.cells.forEach((column, i) => {
-        nextCells[i] = [];
-        column.forEach((row, j) => {
-          const cell = this.cells[i][j];
-          const neighbours = this.neighbours(i, j);
-  
-          let newCell = 0;
-          if (neighbours === 3 || cell && neighbours === 2) {
-            newCell = 1;
-          }
-          nextCells[i][j] = newCell;
-
-          if (!cell && newCell) {
-            this.addCell(i * this.boxSize, j * this.boxSize);
-          } else if (cell && !newCell) {
-            this.removeCell(i * this.boxSize, j * this.boxSize);
-          }
-        });
-      });
-      this.cells = nextCells;
-    }
-    window.requestAnimationFrame(this.render.bind(this));
+      nextColony.push(nextColumn);
+    });
+    this.colony = nextColony;
+    return window.requestAnimationFrame(this.render);
   }
 
   onMouseMove (e) {
     const { clientX, clientY } = e;
     const x = Math.floor(clientX / this.boxSize);
     const y = Math.floor(clientY / this.boxSize);
-    const cell = this.cells[x][y];
+    const cell = this.colony[x][y];
     if (!cell) {
-      this.cells[x][y] = 1;
+      this.colony[x][y] = 1;
       const cellX = clientX - (clientX % this.boxSize);
       const cellY = clientY - (clientY % this.boxSize);
-      this.addCell(cellX, cellY, 'rgba(255,0,0,1.0)');
+      this.addCell(cellX, cellY);
     }
   }
 }
