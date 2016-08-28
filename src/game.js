@@ -15,7 +15,6 @@ export default class Game {
     this.columns = Math.floor(this.width / this.boxSize);
     this.rows = Math.floor(this.height / this.boxSize);
     this.context = this.canvas.getContext('2d');
-    this.context.fillStyle = 'rgba(255,0,0,0.3';
     this.colony = this.getRandomInitialColony();
     this.render = this.render.bind(this);
     window.onmousemove = this.onMouseMove.bind(this);
@@ -23,6 +22,11 @@ export default class Game {
   }
 
   addCell (x, y) {
+    if (Math.abs(x - this.mouseX) < 20 && Math.abs(y - this.mouseY) < 20) {
+      this.context.fillStyle = 'rgba(88,136,176,0.7)';
+    } else {
+      this.context.fillStyle = 'rgba(255,0,0,0.3';
+    }
     this.context.fillRect(x, y, this.size, this.size);
   }
 
@@ -90,12 +94,11 @@ export default class Game {
     const { clientX, clientY } = e;
     const x = Math.floor(clientX / this.boxSize);
     const y = Math.floor(clientY / this.boxSize);
-    const cell = this.colony[x][y];
-    if (!cell) {
+    this.mouseX = clientX - (clientX % this.boxSize);
+    this.mouseY = clientY - (clientY % this.boxSize);
+    if (!this.colony[x][y]) {
       this.colony[x][y] = 1;
-      const cellX = clientX - (clientX % this.boxSize);
-      const cellY = clientY - (clientY % this.boxSize);
-      this.addCell(cellX, cellY);
+      this.addCell(this.mouseX, this.mouseY);
     }
   }
 }
